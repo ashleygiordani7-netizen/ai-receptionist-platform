@@ -1,0 +1,29 @@
+version: 2
+
+updates:
+  # Single root entry covers the whole pnpm workspace (apps/* and
+  # packages/*) — Dependabot resolves pnpm-workspace.yaml natively, no
+  # per-package entry needed.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    # Majors are left out of the group so each gets its own PR for review
+    # (e.g. the TypeScript 6→7 / ESLint 8→9 upgrades this repo has
+    # deliberately deferred — see packages/config/README.md).
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"

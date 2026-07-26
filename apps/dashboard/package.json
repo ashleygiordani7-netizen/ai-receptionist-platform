@@ -1,0 +1,29 @@
+{
+  "name": "@platform/dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Customer-facing dashboard. Talks only to apps/api — never directly to Vapi, Stripe, or any other third-party provider.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf .next dist"
+  },
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "next": "^14.2.0"
+  },
+  "devDependencies": {
+    "@platform/config": "workspace:*",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  }
+}

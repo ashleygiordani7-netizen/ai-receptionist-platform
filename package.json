@@ -1,0 +1,41 @@
+{
+  "name": "ai-receptionist-platform",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Multi-tenant SaaS AI Receptionist platform. PostgreSQL is the source of truth; Vapi is a replaceable voice provider.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,js,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,md,json}\""
+  },
+  "devDependencies": {
+    "@platform/config": "workspace:*",
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0",
+    "only-allow": "^1.2.1",
+    "prettier": "^3.3.0",
+    "turbo": "^2.0.0",
+    "typescript": "^6.0.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.1.0"
+  }
+}

@@ -1,0 +1,6 @@
+# CODEOWNERS
+#
+# Default: every file in the repo requires review from the owner below,
+# unless a more specific pattern further down overrides it. GitHub uses the
+# last matching pattern, so more specific rules must come after this one.
+* @ashleygiordani7-netizen

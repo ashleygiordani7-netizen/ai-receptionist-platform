@@ -1,0 +1,14 @@
+{
+  "name": "@platform/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared tooling presets (ESLint, Tailwind) so every app and package configures its tools identically.",
+  "files": [
+    "eslint",
+    "tailwind"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "test": "echo \"(placeholder) no tests yet for @platform/config — it holds config objects, not testable logic\""
+  }
+}

@@ -1,0 +1,18 @@
+# Build output / dependencies
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+.turbo/
+
+# Lockfile
+pnpm-lock.yaml
+
+# Reference documents with formatting we control deliberately — never
+# auto-reflowed by `pnpm format`.
+CLAUDE.md
+docs/TDD.md
+docs/MILESTONE-ROADMAP.md
+docs/adr/
