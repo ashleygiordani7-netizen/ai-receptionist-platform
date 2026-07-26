@@ -932,3 +932,13 @@ Before completing any task verify:
 - Is accessibility maintained?
 - Can another engineer understand this in six months?
 - Is this the simplest maintainable solution?
+
+# Dependency Version Policy
+
+When selecting package versions:
+
+- Prefer the latest stable version.
+- Only pin to older versions when compatibility requires it.
+- Document compatibility constraints for any non-current dependency.
+- Avoid beta, alpha or release candidate versions unless explicitly approved.
+- Review major version upgrades before adopting them.
