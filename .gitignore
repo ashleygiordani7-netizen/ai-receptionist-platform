@@ -43,3 +43,4 @@ infrastructure/terraform/.terraform.lock.hcl
 
 # Misc
 *.tsbuildinfo
+.claude/settings.local.json
