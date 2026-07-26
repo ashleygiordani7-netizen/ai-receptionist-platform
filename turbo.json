@@ -19,14 +19,6 @@
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
-      // @platform/database's migration integration test behaves differently
-      // depending on these (skip locally, run for real, or fail loudly in
-      // CI without a DB — see migrate.integration.test.ts). Both must be
-      // declared here: Turborepo's strict environment mode otherwise
-      // strips undeclared env vars from the task's process, and — just as
-      // important — omitting them from the cache key could let a cached
-      // "skipped, passed" result from a run without DATABASE_URL be reused
-      // for a run that should actually execute against a real database.
       "env": ["DATABASE_URL", "CI"]
     },
     "test:watch": {
