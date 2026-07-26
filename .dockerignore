@@ -1,0 +1,25 @@
+# Dependencies (installed fresh inside the build)
+**/node_modules
+
+# Build outputs (rebuilt inside the build)
+**/dist
+**/.next
+**/.turbo
+**/coverage
+
+# Version control
+.git
+
+# Environment / secrets — never bake these into an image layer
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Turbo's own prune output, if generated locally
+out

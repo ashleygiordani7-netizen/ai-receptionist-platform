@@ -1,0 +1,58 @@
+# syntax=docker/dockerfile:1
+
+# Builds @platform/api. Multi-stage, using `turbo prune --docker` — the
+# officially documented Turborepo pattern for building one app out of a
+# monorepo (produces a minimal package.json/lockfile subset for a
+# cache-friendly install, plus the pruned source for just this app and its
+# workspace dependencies). `turbo` is already a root devDependency, so this
+# introduces nothing new.
+#
+# The runtime stage copies the whole built/installed workspace subset rather
+# than running a second production-only install pass. A smaller image is
+# possible that way, but it's another install step to keep correct as
+# dependencies change — this matches Turborepo's own official example, which
+# makes the same trade-off.
+
+FROM node:20.19.0-alpine AS base
+# Alpine uses musl libc; some native Node addons expect glibc. Cheap,
+# standard defensive include (also present in Turborepo's own example) —
+# nothing in this app currently needs it, but it avoids a class of
+# hard-to-diagnose failures if that ever changes.
+RUN apk add --no-cache libc6-compat
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+
+# `turbo prune` only needs to read package.json/turbo.json/the lockfile — it
+# doesn't need the workspace's own node_modules installed, so turbo is
+# installed globally here rather than via a full `pnpm install` first.
+FROM base AS pruner
+RUN npm install -g turbo@2.10.7
+WORKDIR /app
+COPY . .
+RUN turbo prune @platform/api --docker
+
+FROM base AS installer
+WORKDIR /app
+# Installing from the pruned package.json/lockfile subset first (before the
+# full pruned source is copied) means this install layer is only invalidated
+# when a dependency actually changes, not on every source edit.
+COPY --from=pruner /app/out/json/ .
+RUN pnpm install --frozen-lockfile
+COPY --from=pruner /app/out/full/ .
+# `turbo prune` only copies files owned by an included workspace package —
+# it doesn't know about shared root-level files referenced via relative
+# paths, like every package's tsconfig.json extending this one. Confirmed
+# directly: the build fails with "Cannot read file '.../tsconfig.base.json'"
+# without this line.
+COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
+RUN pnpm exec turbo run build --filter=@platform/api
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 apiuser
+COPY --from=installer /app .
+USER apiuser
+WORKDIR /app/apps/api
+EXPOSE 3000
+CMD ["node", "--import", "./dist/telemetry.js", "dist/main.js"]

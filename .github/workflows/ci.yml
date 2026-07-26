@@ -63,3 +63,13 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # Build only — verifies each Dockerfile actually produces a working
+      # image. No push, no registry, no login: there's nowhere to push to
+      # yet (that's provisioned in a later milestone task), so this step's
+      # only job is catching a broken Dockerfile before it reaches one.
+      - name: Build api Docker image
+        run: docker build -f infrastructure/docker/Dockerfile.api -t platform-api:ci .
+
+      - name: Build dashboard Docker image
+        run: docker build -f infrastructure/docker/Dockerfile.dashboard -t platform-dashboard:ci .

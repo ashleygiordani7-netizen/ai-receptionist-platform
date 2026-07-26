@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1
+
+# Builds @platform/dashboard. Same `turbo prune --docker` strategy as
+# Dockerfile.api — see that file's header comment for the full rationale.
+#
+# The runtime stage uses Next.js's `output: "standalone"` (apps/dashboard/
+# next.config.js) instead of copying the whole installed workspace: without
+# it there's no reasonable way to ship a minimal Next.js image at all (the
+# alternative is shipping the full node_modules tree). This is the standard,
+# officially documented way to Dockerize a Next.js app, not a size
+# optimization layered on for its own sake.
+
+FROM node:20.19.0-alpine AS base
+RUN apk add --no-cache libc6-compat
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+
+FROM base AS pruner
+RUN npm install -g turbo@2.10.7
+WORKDIR /app
+COPY . .
+RUN turbo prune @platform/dashboard --docker
+
+FROM base AS installer
+WORKDIR /app
+COPY --from=pruner /app/out/json/ .
+RUN pnpm install --frozen-lockfile
+COPY --from=pruner /app/out/full/ .
+# See Dockerfile.api's matching comment — turbo prune doesn't pick up
+# shared root-level files referenced only via relative "extends" paths.
+COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
+RUN pnpm exec turbo run build --filter=@platform/dashboard
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+# `output: "standalone"` traces only the dependencies actually used at
+# runtime into its own self-contained node_modules — .next/static isn't
+# included in that trace (it's served as static assets, not required by the
+# server) and public/ isn't part of the build output at all, so both are
+# copied separately. apps/dashboard has no public/ directory today; add a
+# `COPY --from=installer /app/apps/dashboard/public ./apps/dashboard/public`
+# line here if one is added later.
+COPY --from=installer /app/apps/dashboard/.next/standalone ./
+COPY --from=installer /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
+USER nextjs
+WORKDIR /app/apps/dashboard
+EXPOSE 3000
+CMD ["node", "server.js"]
