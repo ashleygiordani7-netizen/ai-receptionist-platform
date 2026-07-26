@@ -2,7 +2,15 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    // tsconfig.base.json's "module": "ESNext" is fine for bundler-consumed
+    // packages, but this package is now consumed by apps/api as plain,
+    // compiled CommonJS output (no bundler/transform at runtime) — ESNext
+    // output would emit `export`/`import` syntax into .js files, which
+    // Node can't parse as CommonJS (this package.json has no
+    // "type": "module"). NodeNext matches apps/api's own override.
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

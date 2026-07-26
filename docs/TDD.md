@@ -106,7 +106,7 @@ ai-receptionist-platform/
 │   │   ├── components/
 │   │   └── lib/
 │   ├── admin/                     # Internal ops/superadmin console
-│   ├── api/                       # Core API service (NestJS/Fastify)
+│   ├── api/                       # Core API service (NestJS on Fastify — see ADR-0008)
 │   │   ├── src/
 │   │   │   ├── modules/
 │   │   │   │   ├── auth/
@@ -167,7 +167,7 @@ ai-receptionist-platform/
 |---|---|---|
 | Language | TypeScript everywhere | Shared types across FE/BE/workers |
 | Dashboard | Next.js (App Router) + React | SSR for fast dashboards, easy tenant routing |
-| API | NestJS (or Fastify if you want leaner) | Modular, DI, good for large domain surface |
+| API | NestJS on Fastify (`@nestjs/platform-fastify`) | Modular, DI, good for large domain surface — see ADR-0008 |
 | DB | PostgreSQL (managed: RDS/Cloud SQL/Neon) | Row-Level Security for tenant isolation |
 | ORM | Drizzle (drizzle-kit + drizzle-orm) | Chosen for raw SQL control at scale — see ADR-0007 |
 | Cache/Queue broker | Redis (ElastiCache) | Sessions, rate limiting, BullMQ queues |

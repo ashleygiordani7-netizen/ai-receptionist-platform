@@ -4,7 +4,21 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    // Required by NestJS's decorators (@Controller, @Module, @Injectable)
+    // and its DI container, which resolves constructor parameter types via
+    // emitted decorator metadata. Scoped to this app only — no other
+    // package in the monorepo uses Nest or needs these.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // tsconfig.base.json's target (ES2022) makes TS default this to `true`,
+    // which changes how parameter-property class fields are compiled and is
+    // the documented incompatibility between ES2022+ targets and legacy
+    // decorator-based DI (constructor-injected properties can end up
+    // reassigned to `undefined` after the decorator-populated value is set).
+    // Explicitly `false` to keep the legacy decorator semantics Nest's DI
+    // depends on.
+    "useDefineForClassFields": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

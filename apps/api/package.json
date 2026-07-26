@@ -2,17 +2,29 @@
   "name": "@platform/api",
   "version": "0.0.0",
   "private": true,
-  "description": "Placeholder service created during project scaffolding (M0). No endpoints, jobs, or business logic exist yet.",
-  "main": "./src/index.ts",
+  "description": "Core API service. NestJS on Fastify — see ADR-0008. Only a /health endpoint exists so far; real modules begin with the milestone covering tenancy, auth, and organization management.",
+  "main": "./src/main.ts",
   "scripts": {
-    "dev": "echo \"(placeholder) @platform/api has no runnable entry point yet\"",
-    "build": "tsc --noEmit",
+    "dev": "tsc && node --import ./dist/telemetry.js dist/main.js",
+    "start": "node --import ./dist/telemetry.js dist/main.js",
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "test": "vitest run",
+    "test": "tsc && vitest run",
     "test:watch": "vitest",
     "clean": "rm -rf dist"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-fastify": "^11.1.28",
+    "fastify": "^5.10.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "@opentelemetry/sdk-node": "^0.221.0",
+    "@opentelemetry/instrumentation-http": "^0.221.0",
+    "@opentelemetry/instrumentation-fastify": "^0.57.0",
+    "@platform/logger": "workspace:*"
+  },
   "devDependencies": {}
 }
