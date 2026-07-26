@@ -2,7 +2,7 @@
   "name": "@platform/database",
   "version": "0.0.0",
   "private": true,
-  "description": "Placeholder package created during project scaffolding (M0). Implementation begins in the milestone that owns this package.",
+  "description": "The only package that talks to PostgreSQL directly. Owns the schema, migrations, and (from M1 onward) the repository layer. Migration tooling: Drizzle — see ADR-0007.",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
@@ -11,7 +11,17 @@
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:check": "drizzle-kit check"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "@types/pg": "^8.20.0"
+  }
 }

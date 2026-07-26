@@ -8,6 +8,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # @platform/database's migration tests are real integration tests (see
+    # packages/database/src/migrate.integration.test.ts) — they run
+    # `drizzle-kit migrate` against a real, disposable Postgres and assert
+    # the schema_migrations table actually exists, rather than mocking the
+    # database. This service container is what makes DATABASE_URL resolve
+    # to a real instance in CI; those tests skip themselves locally when
+    # DATABASE_URL isn't set.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: platform_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/platform_ci
     steps:
       - name: Checkout
         uses: actions/checkout@v4

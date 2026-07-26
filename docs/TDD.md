@@ -138,7 +138,7 @@ ai-receptionist-platform/
 │       │   │   └── notification-dispatch/
 │       │   └── queues/
 ├── packages/
-│   ├── database/                   # Prisma/Drizzle schema, migrations (see ADR-0003 — renamed from "db")
+│   ├── database/                   # Drizzle schema, migrations (see ADR-0003 — renamed from "db"; ADR-0007 — Drizzle over Prisma)
 │   ├── types/                      # Zod schemas + DTOs shared FE/BE (see ADR-0004 — split from "shared-types")
 │   ├── shared/                     # Cross-cutting utilities with no domain meaning (see ADR-0004)
 │   ├── vapi-client/                # Typed wrapper around Vapi API
@@ -169,7 +169,7 @@ ai-receptionist-platform/
 | Dashboard | Next.js (App Router) + React | SSR for fast dashboards, easy tenant routing |
 | API | NestJS (or Fastify if you want leaner) | Modular, DI, good for large domain surface |
 | DB | PostgreSQL (managed: RDS/Cloud SQL/Neon) | Row-Level Security for tenant isolation |
-| ORM | Prisma or Drizzle | Drizzle if you want more raw SQL control at scale |
+| ORM | Drizzle (drizzle-kit + drizzle-orm) | Chosen for raw SQL control at scale — see ADR-0007 |
 | Cache/Queue broker | Redis (ElastiCache) | Sessions, rate limiting, BullMQ queues |
 | Job queue | BullMQ (Redis-backed) → later SQS/Kafka | Start simple, graduate as volume grows |
 | Event bus (later) | Kafka or SQS/SNS | For analytics fan-out, integration events |
