@@ -880,7 +880,7 @@ Every piece of code should be written as if another engineer will maintain it fo
 
 Code should be self-documenting.
 
-Avoid comments explaining *what* the code does.
+Avoid comments explaining _what_ the code does.
 
 Instead:
 
