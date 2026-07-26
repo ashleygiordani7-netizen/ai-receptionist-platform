@@ -7,6 +7,17 @@
 **/.turbo
 **/coverage
 
+# TypeScript incremental build bookkeeping. If CI's own `pnpm build` step
+# (which runs before the Docker build steps, on the same checkout) has
+# already compiled a package, this file exists but the `dist/` it refers to
+# is excluded above — tsc's incremental compiler trusts this file's record
+# of "already compiled" without verifying the output actually exists, and
+# silently skips re-emitting, which starves the next package's `tsc` of the
+# type declarations it needs. Confirmed directly: this exact sequence caused
+# `apps/api`'s Docker build to fail with "Cannot find module
+# '@platform/logger'" even though the source was correct.
+**/*.tsbuildinfo
+
 # Version control
 .git
 
