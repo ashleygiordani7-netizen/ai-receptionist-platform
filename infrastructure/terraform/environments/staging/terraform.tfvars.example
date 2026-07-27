@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars and fill in. Never commit terraform.tfvars itself
+# (it's gitignored) — even though nothing here is secret today, this keeps
+# the pattern consistent with values that will be added later.
+
+# Must be globally unique across all of AWS, not just this account.
+s3_bucket_name = "platform-staging-storage-CHANGE-ME"
+
+# aws_region and name have sensible defaults (see variables.tf) — override
+# here only if you need something different.

@@ -14,6 +14,39 @@ services, CloudFront, and Secrets Manager.
 
 ## Status
 
-Empty. No resources are defined yet. Terraform modules are introduced
-alongside the milestone that first needs real infrastructure provisioned
-(the foundational platform milestone), not before.
+`modules/{vpc,rds,redis,s3,ecs}` and `environments/staging` exist and are
+`fmt`/`init`/`validate`-clean. Nothing has been applied — see ADR-0009 for
+the full reasoning, summarized below.
+
+- **No AWS credentials were used or introduced anywhere in this repo.**
+  `terraform plan`/`apply` were not run; both require real AWS credentials
+  and create real, billable resources, which is a decision for whoever
+  applies this, not something done as part of writing the code.
+- **Local state** (`environments/staging/versions.tf`), not S3+DynamoDB —
+  no AWS account was available to bootstrap a remote backend from here.
+  Migrate once this is actually being applied for real.
+- **ECS/Fargate compute runs in public subnets**, not behind a NAT Gateway
+  — avoids a real recurring cost (~$32/month+) for placeholder containers
+  serving no real traffic. RDS and Redis are in private subnets regardless,
+  security-group-scoped to the ECS service only, never internet-reachable.
+- **The ECS service runs a public placeholder image** (nginx), not the
+  platform's own `apps/api`/`apps/dashboard` images — matches the Milestone
+  Roadmap's explicit "empty/hello-world containers is fine at this stage."
+  Deploying the real images is Task #7's job, once a registry (ECR) and a
+  deploy pipeline exist.
+- **Staging only** — dev/prod aren't provisioned yet; the module structure
+  makes adding them later a matter of a new `environments/<name>` directory
+  instantiating the same modules, not a redesign.
+
+## Applying this for real
+
+Requires real AWS credentials (not provided or used by any work in this
+repo so far):
+
+```bash
+cd environments/staging
+cp terraform.tfvars.example terraform.tfvars   # fill in a globally-unique bucket name
+terraform init
+terraform plan    # review carefully — this is real, billable AWS infrastructure
+terraform apply
+```
