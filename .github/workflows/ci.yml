@@ -33,7 +33,7 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/platform_ci
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # No explicit `version:` here — pnpm/action-setup@v4 reads it from
       # package.json's `packageManager` field (pinned to an exact version,
